@@ -8,7 +8,6 @@ class InfoTile extends StatelessWidget {
   InfoTile(this.route);
 
   Widget build(BuildContext context) {
-    print(route.transferCount.toString());
     return GestureDetector(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 3, horizontal: 0),
