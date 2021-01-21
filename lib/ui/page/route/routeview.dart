@@ -6,9 +6,13 @@ class RouteView extends StatelessWidget {
   RouteView(this.route);
   @override
   Widget build(BuildContext context) {
-    // return Card(
-    //   child: child,
-    // );
+    return Container(
+      child: Column(
+        children: [
+          Text("húdejó"),
+        ],
+      ),
+    );
     // time to check filc forráskód
   }
 }
