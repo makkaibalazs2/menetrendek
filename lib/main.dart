@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'travel_route.dart';
+import 'model/travel_route.dart';
 import 'api.dart';
-import "infotile.dart";
+import 'ui/routetile.dart';
 //ennél el kéne érni, hogy minden dart file egy package legyen
 //és "package:fájl"
 

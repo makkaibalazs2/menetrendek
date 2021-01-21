@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'travel_route.dart';
+import 'model/travel_route.dart';
 
 enum TravelType { any, bus, train }
-
 _travelTypeToInt(TravelType type) {
   switch (type) {
     case TravelType.any:
