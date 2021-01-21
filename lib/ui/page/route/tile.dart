@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:menetrend/model/travel_route.dart';
 import 'package:menetrend/ui/infochip.dart';
-import 'package:menetrend/ui/page/route/routeview.dart';
+import 'package:menetrend/ui/page/route/route.dart';
 
 class InfoTile extends StatelessWidget {
   final TravelRoute route;
@@ -11,7 +11,7 @@ class InfoTile extends StatelessWidget {
     print(route.transferCount.toString());
     return GestureDetector(
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+        margin: EdgeInsets.symmetric(vertical: 3, horizontal: 0),
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 3),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -52,6 +52,7 @@ class InfoTile extends StatelessWidget {
       onTap: () {
         showModalBottomSheet(
           context: context,
+          backgroundColor: Colors.transparent,
           builder: (BuildContext context) => RouteView(route),
         );
       },

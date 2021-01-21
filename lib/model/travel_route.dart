@@ -17,6 +17,8 @@ class TravelRoute {
     int transferCount = json["atszallasok_szama"] ?? 0;
     List<String> transfers = [];
 
+    //Ezt valahogy meg lehet szebben is for sure. nem kell if,
+    //ha null akkor majd átiratjuk ures listara
     if (json["atszallasinfok"]["1"] != null) {
       (json["atszallasinfok"] as Map<String, dynamic>).forEach((i, json) {
         if (int.parse(i) > 0) {
