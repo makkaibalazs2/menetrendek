@@ -13,8 +13,17 @@ class _RoutePageState extends State<RoutePage> {
   bool _loading = false;
   final _fromController = TextEditingController();
   final _toController = TextEditingController();
+  TextEditingController dateCtl = TextEditingController();
+  
+ // DateTime date = DateTime.now();
+  DateTime date = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); 
+  
+
+  TravelType selectedTravelType = TravelType.any;
   @override
   void initState() {
+      dateCtl.text = date.toString();
+      
     super.initState();
   }
 
@@ -30,8 +39,8 @@ class _RoutePageState extends State<RoutePage> {
       _loading = true;
     });
 
-    routes = await Api.getRoutes(_fromController.text, _toController.text,
-        DateTime.now(), TravelType.any);
+    routes = await Api.getRoutes(
+        _fromController.text, _toController.text, date, selectedTravelType);
 
     setState(() {
       _loading = false;
@@ -75,6 +84,59 @@ class _RoutePageState extends State<RoutePage> {
                             controller: _toController,
                           ),
                         ),
+                        Container(
+                          margin: EdgeInsets.only(top: 10),
+                          height: 50,
+                          child: TextFormField(
+                            controller: dateCtl,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Dátum",
+                              hintText: "Válaszd ki a dátumot",
+                            ),
+                            onTap: () async {
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
+                              date = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(2021),
+                                  lastDate: DateTime(2023));
+                              dateCtl.text = date.toString();
+                            },
+                          ),
+                        ), //<- figyeld a kulonbseget. mindig legyen vesszo, és akkor a lezárásokat látod rendesen. vili?
+                        Container(
+                          // ctrl+shift+i, ne kezzel tabold be nekem az nem mukodik valamiert lol
+                          // akkor nem engedi, ha error van. check problems
+                          margin: EdgeInsets.only(top: 10),
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.0),
+                            border: Border.all(),
+                          ),
+                          child: DropdownButton<TravelType>(
+                                      isExpanded: true,
+                            value: selectedTravelType,
+                            onChanged: (value) => setState(() {
+                              selectedTravelType = value;
+                            }),
+                            items: [
+                              DropdownMenuItem(
+                                child: Text("Összes"),
+                                value: TravelType.any,
+                              ),
+                              DropdownMenuItem(
+                                child: Text("Busz"),
+                                value: TravelType.bus,
+                              ),
+                              DropdownMenuItem(
+                                child: Text("Vonat"),
+                                value: TravelType.train,
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -88,7 +150,7 @@ class _RoutePageState extends State<RoutePage> {
                       ),
                     ),
                     width: 75,
-                    height: 110,
+                    height: 230,
                     child: InkWell(
                       child: Center(
                         child: Text(
