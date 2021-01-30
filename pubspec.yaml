@@ -12,6 +12,7 @@ dependencies:
   http:
   cupertino_icons: ^1.0.0
   flutter_feather_icons: ^1.0.3
+  textfield_search: any
 
 dev_dependencies:
   flutter_test:

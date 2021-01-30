@@ -1,7 +1,9 @@
 import 'dart:convert';
+// import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'model/travel_route.dart';
+import 'package:menetrend/model/station.dart';
+import 'package:menetrend/model/travel_route.dart';
 
 enum TravelType { any, bus, train }
 _travelTypeToInt(TravelType type) {
@@ -48,6 +50,35 @@ class Api {
       return schedules;
     } catch (error) {
       print("ERROR: Api.getSchedules: " + error.toString());
+    }
+    return [];
+  }
+
+  static Future<List<Station>> getStations(String name) async {
+    try {
+      final response = await http
+          .post("https://menetrendek.hu/menetrend/interface/index.php", body: {
+        "json": jsonEncode({
+          "func": "getStationOrAddrByText",
+          "params": {
+            "inputText": name,
+            "searchIn": ["stations"], // <- ide kéne vmi?
+            "searchDate": "2021-01-30",
+            "maxResults": 30,
+            "networks": [1, 2, 3, 10, 11, 12, 13, 14, 24],
+            "currentLang": "hu"
+          }
+        })
+      });
+      List<Station> stations = [];
+      Map responseJson = jsonDecode(response.body);
+      print(response.body);
+      responseJson["results"].forEach((e) {
+        stations.add(Station.fromJson(e));
+      });
+      return stations;
+    } catch (error) {
+      print("ERROR: Api.getStations: " + error.toString());
     }
     return [];
   }
