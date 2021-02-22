@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:menetrend/api.dart';
-import 'package:menetrend/model/station.dart';
-import 'package:menetrend/model/travel_route.dart';
+import 'package:menetrend/data/model/station.dart';
+import 'package:menetrend/data/model/travel_route.dart';
 import 'package:menetrend/ui/page/route/tile.dart';
 import 'package:textfield_search/textfield_search.dart';
 
@@ -42,7 +42,7 @@ class _RoutePageState extends State<RoutePage> {
     super.dispose();
   }
 
-  _refresh() async {
+  Future _refresh() async {
     setState(() {
       routes = [];
       _loading = true;
@@ -135,6 +135,7 @@ class _RoutePageState extends State<RoutePage> {
                           ),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<TravelType>(
+                              dropdownColor: Theme.of(context).backgroundColor,
                               isExpanded: true,
                               value: selectedTravelType,
                               onChanged: (value) => setState(() {
@@ -165,7 +166,7 @@ class _RoutePageState extends State<RoutePage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
                       border: Border.all(
-                        color: Colors.blueAccent,
+                        color: Theme.of(context).accentColor,
                         width: 2,
                       ),
                     ),
@@ -174,12 +175,19 @@ class _RoutePageState extends State<RoutePage> {
                     child: InkWell(
                       child: Center(
                         child: Text(
-                          "LEKÉRÉS",
-                          style: TextStyle(color: Colors.blueAccent),
+                          "LEKÉRÉS\n(VISSZAUTfluttf)",
+                          style:
+                              TextStyle(color: Theme.of(context).accentColor),
                         ),
                       ),
                       onTap: () async {
-                        _refresh();
+                        await _refresh();
+                      },
+                      onLongPress: () async {
+                        var temp = _fromController.text;
+                        _fromController.text = _toController.text;
+                        _toController.text = temp;
+                        await _refresh();
                       },
                     ),
                   )
@@ -189,7 +197,8 @@ class _RoutePageState extends State<RoutePage> {
             !_loading
                 //TODO: üres listánál üzenet
                 ? Column(
-                    children: routes.map((route) => InfoTile(route)).toList(),
+                    children: <Widget>[Divider()] +
+                        routes.map((route) => InfoTile(route)).toList(),
                   )
                 : Padding(
                     padding: EdgeInsets.only(top: 40),
