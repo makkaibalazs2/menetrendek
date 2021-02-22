@@ -175,7 +175,7 @@ class _RoutePageState extends State<RoutePage> {
                     child: InkWell(
                       child: Center(
                         child: Text(
-                          "LEKÉRÉS\n(VISSZAUTfluttf)",
+                          "LEKÉRÉS\n(VISSZAUT)",
                           style:
                               TextStyle(color: Theme.of(context).accentColor),
                         ),

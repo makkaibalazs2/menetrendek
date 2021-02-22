@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:menetrend/model/travel_route.dart';
+import 'package:menetrend/data/model/travel_route.dart';
 
 class RouteView extends StatelessWidget {
   final TravelRoute route;
@@ -10,7 +10,7 @@ class RouteView extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.all(
           Radius.circular(15),
         ),

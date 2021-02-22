@@ -2,8 +2,8 @@ import 'dart:convert';
 // import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:menetrend/model/station.dart';
-import 'package:menetrend/model/travel_route.dart';
+import 'package:menetrend/data/model/station.dart';
+import 'package:menetrend/data/model/travel_route.dart';
 
 enum TravelType { any, bus, train }
 _travelTypeToInt(TravelType type) {
