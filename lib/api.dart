@@ -41,17 +41,39 @@ class Api {
 
       if (response.statusCode != 200) throw "Invalid response";
 
-      Map<String, dynamic> responseJson = jsonDecode(response.body);
+      Map responseJson = jsonDecode(response.body);
       List<TravelRoute> schedules = [];
 
-      (responseJson["results"]["talalatok"] as Map<String, Object>)
-          .forEach((key, json) => schedules.add(TravelRoute.fromJson(json)));
+      responseJson["results"]["talalatok"].forEach((String key, json) {
+        getRun(int.parse(json["nativeData"]["RunId"])).then((runJson) {
+          schedules.add(TravelRoute.fromJson(json, runJson));
+        });
+      });
 
       return schedules;
     } catch (error) {
       print("ERROR: Api.getSchedules: " + error.toString());
     }
     return [];
+  }
+
+  static Future<Map> getRun(int runId) async {
+    try {
+      final response = await http
+          .post("https://menetrendek.hu/menetrend/interface/index.php", body: {
+        {
+          "func": "getRunsDelay",
+          "params": {
+            "runs": [runId]
+          }
+        }
+      });
+      Map responseJson = jsonDecode(response.body);
+      return responseJson;
+    } catch (error) {
+      print("ERROR: Api.getExtendedData: " + error.toString());
+    }
+    return {};
   }
 
   static Future<List<Station>> getStations(String name) async {
@@ -63,7 +85,7 @@ class Api {
           "params": {
             "inputText": name,
             "searchIn": ["stations"], // <- ide kéne vmi?
-            "searchDate": "2021-01-30",
+            "searchDate": "2021-02-23",
             "maxResults": 30,
             "networks": [1, 2, 3, 10, 11, 12, 13, 14, 24],
             "currentLang": "hu"

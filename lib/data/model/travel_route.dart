@@ -1,15 +1,16 @@
 class TravelRoute {
-  String from;
-  String to;
-  String departure;
-  String arrival;
-  int transferCount;
-  List<String> transfers;
+  final String from;
+  final String to;
+  final String departure;
+  final String arrival;
+  final int transferCount;
+  final List<String> transfers;
+  final Run run;
 
   TravelRoute(this.from, this.to, this.departure, this.arrival,
-      this.transferCount, this.transfers);
+      this.transferCount, this.transfers, this.run);
 
-  factory TravelRoute.fromJson(Map json) {
+  factory TravelRoute.fromJson(Map json, Map runJson) {
     String from = json["indulasi_hely"];
     String to = json["erkezesi_hely"];
     String departure = json["indulasi_ido"];
@@ -27,6 +28,27 @@ class TravelRoute {
       });
     }
 
-    return TravelRoute(from, to, departure, arrival, transferCount, transfers);
+    Run run = Run.fromJson(runJson);
+
+    return TravelRoute(
+        from, to, departure, arrival, transferCount, transfers, run);
+  }
+}
+
+class Run {
+  final int runId;
+  final String delay; //TODO: use correct time class, not string
+  final String renCAM;
+  final bool tracked; //idk miez
+  //TODO: FUCKING COORDINATES???? IDK CLASS FOR THAT
+  Run(this.runId, this.delay, this.renCAM, this.tracked);
+
+  factory Run.fromJson(Map runJson) {
+    int runId = int.parse(runJson["result"]["data"]["run_id"]);
+    String delay = runJson["result"]["data"]["delay"];
+    String renCAM = runJson["result"]["data"]["regnum"];
+    bool tracked = runJson["result"]["data"]["tracked"];
+//  runJson["result"]["data"]["geom"]["coordinates"]
+    return Run(runId, delay, renCAM, tracked);
   }
 }

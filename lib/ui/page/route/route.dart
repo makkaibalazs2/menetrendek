@@ -22,12 +22,14 @@ class RouteView extends StatelessWidget {
             infoText("Célállomás", route.to),
             infoText("Indulás ideje", route.departure),
             infoText("Érkezés ideje", route.arrival),
+            infoText("Rendszám", route.arrival),
             route.transferCount > 0
                 ? infoText("Átszállások száma", route.transferCount.toString())
                 : TextSpan(),
             route.transferCount > 0
                 ? infoText("Átszállások", route.transfers.join(", "))
                 : TextSpan(),
+            infoText("Keses", route.run.delay),
           ],
         ),
       ),
