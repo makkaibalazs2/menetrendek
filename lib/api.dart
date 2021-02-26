@@ -23,21 +23,22 @@ class Api {
   static Future<List<TravelRoute>> getRoutes(
       String from, String to, DateTime date, TravelType travelType) async {
     try {
-      final response = await http
-          .post("https://menetrendek.hu/menetrend/interface/index.php", body: {
-        "json": jsonEncode({
-          "func": "getRoutes",
-          "params": {
-            "datum": date.toString(),
-            "honnan": from,
-            "hova": to,
-            "naptipus": 0,
-            "hour": 0,
-            "min": 0,
-            "preferencia": _travelTypeToInt(travelType)
-          }
-        })
-      });
+      final response = await http.post(
+          Uri.parse("https://menetrendek.hu/menetrend/interface/index.php"),
+          body: {
+            "json": jsonEncode({
+              "func": "getRoutes",
+              "params": {
+                "datum": date.toString(),
+                "honnan": from,
+                "hova": to,
+                "naptipus": 0,
+                "hour": 0,
+                "min": 0,
+                "preferencia": _travelTypeToInt(travelType)
+              }
+            })
+          });
 
       if (response.statusCode != 200) throw "Invalid response";
 
@@ -45,7 +46,9 @@ class Api {
       List<TravelRoute> schedules = [];
 
       responseJson["results"]["talalatok"].forEach((String key, json) {
-        getRun(int.parse(json["nativeData"]["RunId"])).then((runJson) {
+        print(json["nativeData"].toString());
+        print(json["nativeData"][0].toString());
+        getRun(json["nativeData"][0]["RunId"]).then((runJson) {
           schedules.add(TravelRoute.fromJson(json, runJson));
         });
       });
@@ -58,40 +61,40 @@ class Api {
   }
 
   static Future<Map> getRun(int runId) async {
-    try {
-      final response = await http
-          .post("https://menetrendek.hu/menetrend/interface/index.php", body: {
-        {
+    // try {
+    final response = await http.post(
+        Uri.parse("https://menetrendek.hu/menetrend/interface/index.php"),
+        body: jsonEncode({
           "func": "getRunsDelay",
           "params": {
             "runs": [runId]
           }
-        }
-      });
-      Map responseJson = jsonDecode(response.body);
-      return responseJson;
-    } catch (error) {
-      print("ERROR: Api.getExtendedData: " + error.toString());
-    }
+        }));
+    Map responseJson = jsonDecode(response.body);
+    return responseJson;
+    // } catch (error) {
+    //   print("ERROR: Api.getExtendedData: " + error.toString());
+    // }
     return {};
   }
 
   static Future<List<Station>> getStations(String name) async {
     try {
-      final response = await http
-          .post("https://menetrendek.hu/menetrend/interface/index.php", body: {
-        "json": jsonEncode({
-          "func": "getStationOrAddrByText",
-          "params": {
-            "inputText": name,
-            "searchIn": ["stations"], // <- ide kéne vmi?
-            "searchDate": "2021-02-23",
-            "maxResults": 30,
-            "networks": [1, 2, 3, 10, 11, 12, 13, 14, 24],
-            "currentLang": "hu"
-          }
-        })
-      });
+      final response = await http.post(
+          Uri.parse("https://menetrendek.hu/menetrend/interface/index.php"),
+          body: {
+            "json": jsonEncode({
+              "func": "getStationOrAddrByText",
+              "params": {
+                "inputText": name,
+                "searchIn": ["stations"], // <- ide kéne vmi?
+                "searchDate": "2021-02-23",
+                "maxResults": 30,
+                "networks": [1, 2, 3, 10, 11, 12, 13, 14, 24],
+                "currentLang": "hu"
+              }
+            })
+          });
       List<Station> stations = [];
       Map responseJson = jsonDecode(response.body);
       print(response.body);

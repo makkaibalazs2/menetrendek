@@ -21,7 +21,7 @@ class TravelRoute {
     //Ezt valahogy meg lehet szebben is for sure. nem kell if,
     //ha null akkor majd átiratjuk ures listara
     if (json["atszallasinfok"]["1"] != null) {
-      (json["atszallasinfok"] as Map<String, dynamic>).forEach((i, json) {
+      json["atszallasinfok"].forEach((i, json) {
         if (int.parse(i) > 0) {
           transfers.add(json["atszallohely"]);
         }
@@ -44,10 +44,13 @@ class Run {
   Run(this.runId, this.delay, this.renCAM, this.tracked);
 
   factory Run.fromJson(Map runJson) {
-    int runId = int.parse(runJson["result"]["data"]["run_id"]);
-    String delay = runJson["result"]["data"]["delay"];
-    String renCAM = runJson["result"]["data"]["regnum"];
-    bool tracked = runJson["result"]["data"]["tracked"];
+    int runId = (runJson["result"]["data"][0]["run_id"] is String
+        ? int.parse(runJson["result"]["data"][0]["run_id"])
+        : runJson["result"]["data"][0]["run_id"]);
+    String delay = runJson["result"]["data"][0]["delay"];
+    String renCAM = runJson["result"]["data"][0]["regnum"];
+    bool tracked =
+        runJson["result"]["data"][0]["tracked"] == "true" ? true : false;
 //  runJson["result"]["data"]["geom"]["coordinates"]
     return Run(runId, delay, renCAM, tracked);
   }
