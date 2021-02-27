@@ -49,11 +49,16 @@ class _RoutePageState extends State<RoutePage> {
     });
 
     routes = await Api.getRoutes(
-        _fromController.text, _toController.text, date, selectedTravelType);
+      _fromController.text,
+      _toController.text,
+      date,
+      selectedTravelType,
+    );
 
-    setState(() {
-      _loading = false;
-    });
+    routes.sort((a, b) => a.departure.compareTo(b.departure));
+
+    _loading = false;
+    setState(() {});
   }
 
   @override
