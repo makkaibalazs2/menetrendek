@@ -44,14 +44,19 @@ class Run {
   Run(this.runId, this.delay, this.renCAM, this.tracked);
 
   factory Run.fromJson(Map runJson) {
-    int runId = (runJson["result"]["data"][0]["run_id"] is String
-        ? int.parse(runJson["result"]["data"][0]["run_id"])
-        : runJson["result"]["data"][0]["run_id"]);
-    String delay = runJson["result"]["data"][0]["delay"];
-    String renCAM = runJson["result"]["data"][0]["regnum"];
-    bool tracked =
-        runJson["result"]["data"][0]["tracked"] == "true" ? true : false;
+    if (runJson["result"] == "null") {
+      print("RUNJSON: $runJson");
+      int runId = (runJson["result"]["data"][0]["run_id"] is String
+          ? int.parse(runJson["result"]["data"][0]["run_id"])
+          : runJson["result"]["data"][0]["run_id"]);
+      String delay = runJson["result"]["data"][0]["delay"];
+      String renCAM = runJson["result"]["data"][0]["regnum"];
+      bool tracked =
+          runJson["result"]["data"][0]["tracked"] == "true" ? true : false;
 //  runJson["result"]["data"]["geom"]["coordinates"]
-    return Run(runId, delay, renCAM, tracked);
+      return Run(runId, delay, renCAM, tracked);
+    } else {
+      return Run(0, "Nem elerheto", "Nem elerheto", false);
+    }
   }
 }

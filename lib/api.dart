@@ -21,7 +21,11 @@ _travelTypeToInt(TravelType type) {
 
 class Api {
   static Future<List<TravelRoute>> getRoutes(
-      String from, String to, DateTime date, TravelType travelType) async {
+    String from,
+    String to,
+    DateTime date,
+    TravelType travelType,
+  ) async {
     try {
       final response = await http.post(
           Uri.parse("https://menetrendek.hu/menetrend/interface/index.php"),
@@ -45,6 +49,8 @@ class Api {
       Map responseJson = jsonDecode(response.body);
       List<TravelRoute> schedules = [];
 
+      int length = 0;
+      responseJson["results"]["talalatok"].forEach((key, json) => length++);
       responseJson["results"]["talalatok"].forEach((String key, json) {
         print(json["nativeData"].toString());
         print(json["nativeData"][0].toString());
@@ -52,7 +58,9 @@ class Api {
           schedules.add(TravelRoute.fromJson(json, runJson));
         });
       });
-
+      while (schedules.length != length) {
+        await Future.delayed(Duration(milliseconds: 50));
+      }
       return schedules;
     } catch (error) {
       print("ERROR: Api.getSchedules: " + error.toString());
@@ -97,7 +105,6 @@ class Api {
           });
       List<Station> stations = [];
       Map responseJson = jsonDecode(response.body);
-      print(response.body);
       responseJson["results"].forEach((e) {
         stations.add(Station.fromJson(e));
       });

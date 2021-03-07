@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:menetrend/api.dart';
 import 'package:menetrend/data/model/station.dart';
 import 'package:menetrend/data/model/travel_route.dart';
+import 'package:menetrend/ui/page/route/builder.dart';
 import 'package:menetrend/ui/page/route/tile.dart';
 import 'package:textfield_search/textfield_search.dart';
 
@@ -16,6 +17,8 @@ class _RoutePageState extends State<RoutePage> {
   final _fromController = TextEditingController();
   final _toController = TextEditingController();
   TextEditingController dateCtl = TextEditingController();
+  RouteTileBuilder builder = RouteTileBuilder();
+  List<InfoTile> traveltiles = [];
 
   DateTime date =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -42,9 +45,9 @@ class _RoutePageState extends State<RoutePage> {
     super.dispose();
   }
 
-  Future _refresh() async {
+  _refresh() async {
     setState(() {
-      routes = [];
+      // routes = [];
       _loading = true;
     });
 
@@ -55,10 +58,15 @@ class _RoutePageState extends State<RoutePage> {
       selectedTravelType,
     );
 
-    routes.sort((a, b) => a.departure.compareTo(b.departure));
+    // routes.sort((a, b) => a.departure.compareTo(b.departure));
+    builder.build(routes);
+    print(routes.length);
+    print(builder.tiles.length);
+    traveltiles = builder.tiles;
 
     _loading = false;
     setState(() {});
+    return true;
   }
 
   @override
@@ -185,8 +193,8 @@ class _RoutePageState extends State<RoutePage> {
                               TextStyle(color: Theme.of(context).accentColor),
                         ),
                       ),
-                      onTap: () async {
-                        await _refresh();
+                      onTap: () {
+                        _refresh();
                       },
                       onLongPress: () async {
                         var temp = _fromController.text;
@@ -202,8 +210,7 @@ class _RoutePageState extends State<RoutePage> {
             !_loading
                 //TODO: üres listánál üzenet
                 ? Column(
-                    children: <Widget>[Divider()] +
-                        routes.map((route) => InfoTile(route)).toList(),
+                    children: <Widget>[Divider()] + traveltiles,
                   )
                 : Padding(
                     padding: EdgeInsets.only(top: 40),
