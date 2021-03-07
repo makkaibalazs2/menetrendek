@@ -60,13 +60,10 @@ class _RoutePageState extends State<RoutePage> {
 
     // routes.sort((a, b) => a.departure.compareTo(b.departure));
     builder.build(routes);
-    print(routes.length);
-    print(builder.tiles.length);
     traveltiles = builder.tiles;
 
     _loading = false;
     setState(() {});
-    return true;
   }
 
   @override

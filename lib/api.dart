@@ -52,8 +52,6 @@ class Api {
       int length = 0;
       responseJson["results"]["talalatok"].forEach((key, json) => length++);
       responseJson["results"]["talalatok"].forEach((String key, json) {
-        print(json["nativeData"].toString());
-        print(json["nativeData"][0].toString());
         getRun(json["nativeData"][0]["RunId"]).then((runJson) {
           schedules.add(TravelRoute.fromJson(json, runJson));
         });
